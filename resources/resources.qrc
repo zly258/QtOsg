@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/">
+    <file>icons/app_icon.svg</file>
+  </qresource>
+  <qresource prefix="/i18n">
+    <file>qt_zh_CN.qm</file>
+    <file>qtbase_zh_CN.qm</file>
+  </qresource>
+</RCC>
