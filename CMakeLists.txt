@@ -40,9 +40,8 @@ find_package(OpenSceneGraph REQUIRED COMPONENTS
     osgAnimation
 )
 
-# 包含头文件目录
+# 包含头文件目录（仅第三方）
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${OPENSCENEGRAPH_INCLUDE_DIRS}
 )
 
