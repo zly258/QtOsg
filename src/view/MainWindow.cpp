@@ -46,6 +46,34 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             }
         }
     });
+
+    auto* viewMenu = menuBar()->addMenu(QString("视图"));
+    auto* orthoAct = viewMenu->addAction(QString("正交视图"));
+    orthoAct->setCheckable(true);
+    orthoAct->setChecked(true);
+    connect(orthoAct, &QAction::toggled, this, [this](bool on){
+        if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setOrthographic(on);
+    });
+    auto* stdViewMenu = viewMenu->addMenu(QString("标准视图"));
+    auto* frontAct = stdViewMenu->addAction(QString("前视"));
+    auto* backAct = stdViewMenu->addAction(QString("后视"));
+    auto* leftAct = stdViewMenu->addAction(QString("左视"));
+    auto* rightAct = stdViewMenu->addAction(QString("右视"));
+    auto* topAct = stdViewMenu->addAction(QString("顶视"));
+    auto* bottomAct = stdViewMenu->addAction(QString("底视"));
+    connect(frontAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Front); });
+    connect(backAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Back); });
+    connect(leftAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Left); });
+    connect(rightAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Right); });
+    connect(topAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Top); });
+    connect(bottomAct, &QAction::triggered, this, [this](){ if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->setStandardView(OSGWidget::Bottom); });
+
+    auto* sceneMenu = menuBar()->addMenu(QString("场景"));
+    auto* clearAct = sceneMenu->addAction(QString("清空场景"));
+    connect(clearAct, &QAction::triggered, this, [this](){
+        if (auto* v = qobject_cast<OSGWidget*>(centralWidget())) v->clearSceneGraph();
+        buildTree(nullptr);
+    });
 }
 
 MainWindow::~MainWindow() {}

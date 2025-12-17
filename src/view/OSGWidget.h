@@ -28,6 +28,11 @@ public:
     bool loadModel(const QString& path);
     osg::Node* currentNode() const;
 
+    enum ViewDir { Front, Back, Left, Right, Top, Bottom };
+    void setOrthographic(bool enable);
+    void setStandardView(ViewDir dir);
+    void clearSceneGraph();
+
 signals:
     void statsUpdated(double fps, double memMB);
     void nodePicked(osg::Node* node);
@@ -49,6 +54,7 @@ protected:
 private:
     osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> _gw;
     std::unique_ptr<osgViewer::Viewer> _viewer;
+    osg::ref_ptr<osgGA::TrackballManipulator> _manip;
     QTimer _timer;
     QElapsedTimer _fpsTimer;
     int _frameCount = 0;
@@ -59,6 +65,16 @@ private:
     osg::ref_ptr<osgText::Text> _hudText;
     osg::observer_ptr<osg::Node> _selected;
     osg::ref_ptr<osg::StateAttribute> _savedMaterial;
+    bool _ortho = true;
+    double _orthoScale = 1.0;
+    QPoint _pressPos;
+    bool _dragging = false;
+    bool _panning = false;
+    QPoint _panStart;
+    double _panSpeed = 1.0;
+    bool _wireframe = false;
+    bool _backface = false;
+    bool _lighting = true;
 
     void createScene();
     void createHud();
@@ -67,4 +83,9 @@ private:
     void applyHighlight(osg::Node* node);
     void clearHighlight();
     QString buildProperties(osg::Node* node) const;
+    void updateProjection();
+    void toggleWireframe();
+    void toggleBackface();
+    void toggleLighting();
+    void applyRenderStates();
 };
