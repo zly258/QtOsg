@@ -35,32 +35,12 @@ void OSGWidget::initializeGL() {
     _root = new osg::Group;
     _sceneRoot = new osg::Group;
     _root->addChild(_sceneRoot.get());
-    createScene();
-    createHud();
     _viewer->setSceneData(_root.get());
 }
 
-void OSGWidget::createScene() {
-    osg::ref_ptr<osg::Geode> geode = new osg::Geode;
-    geode->addDrawable(new osg::ShapeDrawable(new osg::Box(osg::Vec3(0, 0, 0), 1.0f)));
-    _sceneRoot->addChild(geode.get());
-}
+void OSGWidget::createScene() {}
 
-void OSGWidget::createHud() {
-    _hudCamera = new osg::Camera;
-    _hudCamera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
-    _hudCamera->setProjectionMatrix(osg::Matrix::ortho2D(0, width(), 0, height()));
-    _hudCamera->setViewMatrix(osg::Matrix::identity());
-    _hudCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
-    _hudCamera->setRenderOrder(osg::Camera::POST_RENDER);
-    osg::ref_ptr<osg::Geode> geode = new osg::Geode;
-    _hudText = new osgText::Text;
-    _hudText->setCharacterSize(16.0f);
-    _hudText->setPosition(osg::Vec3(10.0f, height() - 22.0f, 0.0f));
-    geode->addDrawable(_hudText.get());
-    _hudCamera->addChild(geode.get());
-    _root->addChild(_hudCamera.get());
-}
+void OSGWidget::createHud() {}
 
 void OSGWidget::resizeGL(int w, int h) {
     if (_gw.valid()) {
@@ -72,10 +52,7 @@ void OSGWidget::resizeGL(int w, int h) {
         double aspect = static_cast<double>(w) / static_cast<double>(std::max(1, h));
         cam->setProjectionMatrixAsPerspective(30.0, aspect, 1.0, 10000.0);
     }
-    if (_hudCamera.valid()) {
-        _hudCamera->setProjectionMatrix(osg::Matrix::ortho2D(0, w, 0, h));
-        if (_hudText.valid()) _hudText->setPosition(osg::Vec3(10.0f, h - 22.0f, 0.0f));
-    }
+    
 }
 
 void OSGWidget::paintGL() {
@@ -97,10 +74,7 @@ void OSGWidget::paintGL() {
 #else
         double memMB = 0.0;
 #endif
-        if (_hudText.valid()) {
-            QString s = QString("FPS: %1  MEM: %2 MB").arg(_lastFps, 0, 'f', 1).arg(memMB, 0, 'f', 1);
-            _hudText->setText(s.toStdString());
-        }
+        emit statsUpdated(_lastFps, memMB);
     }
 }
 
@@ -168,4 +142,10 @@ bool OSGWidget::loadModel(const QString& path) {
     _sceneRoot->removeChildren(0, _sceneRoot->getNumChildren());
     _sceneRoot->addChild(node.get());
     return true;
+}
+
+osg::Node* OSGWidget::currentNode() const {
+    if (!_sceneRoot.valid()) return nullptr;
+    if (_sceneRoot->getNumChildren() == 0) return nullptr;
+    return _sceneRoot->getChild(0);
 }

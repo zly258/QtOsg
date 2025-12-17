@@ -11,6 +11,8 @@
 #include <osg/Geode>
 #include <osg/Group>
 #include <osgText/Text>
+#include <osg/Node>
+#include <QLabel>
 
 class OSGWidget : public QOpenGLWidget {
     Q_OBJECT
@@ -19,6 +21,10 @@ public:
     ~OSGWidget() override;
 
     bool loadModel(const QString& path);
+    osg::Node* currentNode() const;
+
+signals:
+    void statsUpdated(double fps, double memMB);
 
 protected:
     void initializeGL() override;
