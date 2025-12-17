@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QDockWidget>
 #include <osg/Node>
+#include <QTextEdit>
 
 class OSGWidget;
 
@@ -20,5 +21,7 @@ private:
     QDockWidget* _treeDock = nullptr;
     QTreeView* _treeView = nullptr;
     QStandardItemModel* _treeModel = nullptr;
+    QDockWidget* _propDock = nullptr;
+    QTextEdit* _propView = nullptr;
     void buildTree(osg::Node* node);
 };

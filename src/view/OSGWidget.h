@@ -13,6 +13,11 @@
 #include <osgText/Text>
 #include <osg/Node>
 #include <QLabel>
+#include <osgUtil/LineSegmentIntersector>
+#include <osg/PolygonMode>
+#include <osg/StateSet>
+#include <osg/Geometry>
+#include <osg/Geode>
 
 class OSGWidget : public QOpenGLWidget {
     Q_OBJECT
@@ -25,6 +30,8 @@ public:
 
 signals:
     void statsUpdated(double fps, double memMB);
+    void nodePicked(osg::Node* node);
+    void propertiesUpdated(const QString& text);
 
 protected:
     void initializeGL() override;
@@ -50,8 +57,14 @@ private:
     osg::ref_ptr<osg::Group> _sceneRoot;
     osg::ref_ptr<osg::Camera> _hudCamera;
     osg::ref_ptr<osgText::Text> _hudText;
+    osg::observer_ptr<osg::Node> _selected;
+    osg::ref_ptr<osg::StateAttribute> _savedMaterial;
 
     void createScene();
     void createHud();
     osgGA::EventQueue* eventQueue() const;
+    void pickAt(int x, int y);
+    void applyHighlight(osg::Node* node);
+    void clearHighlight();
+    QString buildProperties(osg::Node* node) const;
 };
