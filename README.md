@@ -173,7 +173,6 @@ QtOsg/
 ### 代码规范
 - 使用C++17标准
 - 遵循Qt和OSG的命名规范
-- 头文件使用#pragma once
 - 类和方法使用中文注释说明
 
 ### 插件开发
@@ -218,7 +217,6 @@ set(OSG_DIR "你的OSG路径" CACHE PATH "OSG root path")
 
 如有问题或建议，请通过以下方式联系：
 - 提交Issue：[GitHub Issues](https://github.com/zly258/QtOsg/issues)
-- 邮箱：zly258@example.com
 
 ## 致谢
 
